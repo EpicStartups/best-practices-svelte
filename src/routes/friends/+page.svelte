@@ -5,18 +5,15 @@
 
 	const { data } = $props();
 
-	// constants
 	// variables
 	let openModal: boolean = $state(false);
 	let selectedFriendId: number = $state(0.0);
-
-	let nickName: string = $state('');
 
 	let friendName: string = $state('');
 	let friendAge: number = $state(0);
 
 	// const mod = testModule();
-	const mod = new TestModule();
+	const mod = new TestModule(data.hobbies);
 
 	let filteredFriends = $derived(mod.getFriends({ name: 'test1' }));
 	let allFriends = $derived(mod.getAllFriends);
@@ -34,7 +31,17 @@
 		mod.addFriends(data);
 	}
 
-	function handleAddFamily(event: Event) {
+	function handleAddHobby(event: Event) {
+		const form = event.target as HTMLFormElement;
+		const formData = new FormData(form);
+		const data = Array.from(formData.entries()).reduce((acc, [key, value]) => {
+			acc[key] = value;
+			return acc;
+		}, {});
+		mod.addHobbies(data);
+	}
+
+	function handleAddFamily(event: Event, friend_id: number) {
 		const form = event.target as HTMLFormElement;
 		console.log(form);
 		const formData = new FormData(form);
@@ -42,7 +49,9 @@
 			acc[key] = value;
 			return acc;
 		}, {});
-		data.friend_id = selectedFriendId;
+
+		// this one
+		data.friend_id = friend_id;
 		mod.addFamilyMembers(data);
 	}
 </script>
@@ -125,11 +134,10 @@
 			<form
 				onsubmit={(e: Event) => {
 					e.preventDefault();
-					handleAddFamily(e);
+					handleAddFamily(e, friend_id);
 				}}
 			>
 				<input type="text" name="nick_name" placeholder="Friend's family name" required />
-				<!-- <input type="number" name="age" placeholder="Friend's age" required /> -->
 				<button type="submit">Add Friend</button>
 			</form>
 			<h2>Modal Title</h2>
@@ -153,7 +161,18 @@
 </form>
 
 <h1>Data from server</h1>
-{JSON.stringify(data)}
+{JSON.stringify(mod.getHobbies)}
+
+<form
+	onsubmit={(e: Event) => {
+		e.preventDefault();
+		handleAddHobby(e);
+	}}
+>
+	<input type="text" name="name" placeholder="Hobby name" required />
+	<input type="number" name="skillLevel" placeholder="Hobby skill level" required />
+	<button type="submit">Add Hobby</button>
+</form>
 
 <style>
 	.modal {

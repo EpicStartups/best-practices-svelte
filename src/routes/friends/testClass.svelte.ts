@@ -3,6 +3,7 @@ import type { Friend } from './types';
 
 export class TestModule {
 	private counter: number = $state(0);
+	private hobbies = $state([]);
 	private friends = $state<Friend[]>([
 		{
 			id: Math.random(),
@@ -21,7 +22,9 @@ export class TestModule {
 		]
 	});
 
-	constructor() {}
+	constructor(hobbies) {
+		this.hobbies = hobbies;
+	}
 
 	increment() {
 		this.counter += 1;
@@ -31,10 +34,23 @@ export class TestModule {
 		return this.counter * 2;
 	}
 
+	get getHobbies() {
+		return this.hobbies;
+	}
+
 	addFriends({ name, age }) {
 		console.log('Add friends');
 		this.friends.push({ id: Math.random(), name, age, best: false });
 	}
+
+	addHobbies({ name, skillLevel }) {
+		console.log('add hobbies');
+		this.hobbies.push({ name, skillLevel });
+	}
+
+	// openModal() {
+	// 	return true;
+	// }
 
 	addFamilyMembers({
 		friend_id,
