@@ -1,8 +1,9 @@
 import { getFriendsFiltered } from './utils';
+import type { Friend } from './types';
 
 export class TestModule {
-	private counter = $state(0);
-	private friends = $state([
+	private counter: number = $state(0);
+	private friends = $state<Friend[]>([
 		{
 			id: Math.random(),
 			name: 'test1',
@@ -33,6 +34,27 @@ export class TestModule {
 	addFriends({ name, age }) {
 		console.log('Add friends');
 		this.friends.push({ id: Math.random(), name, age, best: false });
+	}
+
+	addFamilyMembers({
+		friend_id,
+		nick_name
+		// sports
+	}: {
+		friend_id: number;
+		nick_name: string;
+		// sports: string[];
+	}) {
+		console.log('add family member');
+		this.friends = this.friends.map((friend) => {
+			if (friend.id === friend_id) {
+				return {
+					...friend,
+					family: friend.family ? [...friend.family, { nick_name }] : [{ nick_name }]
+				};
+			}
+			return friend;
+		});
 	}
 
 	updateFriend(id, payload) {

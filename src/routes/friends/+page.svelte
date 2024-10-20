@@ -5,10 +5,19 @@
 
 	const { data } = $props();
 
-	let friendName = $state('');
-	let friendAge = $state(0);
+	// constants
+	// variables
+	let openModal: boolean = $state(false);
+	let selectedFriendId: number = $state(0.0);
+
+	let nickName: string = $state('');
+
+	let friendName: string = $state('');
+	let friendAge: number = $state(0);
+
 	// const mod = testModule();
 	const mod = new TestModule();
+
 	let filteredFriends = $derived(mod.getFriends({ name: 'test1' }));
 	let allFriends = $derived(mod.getAllFriends);
 
@@ -22,8 +31,19 @@
 			acc[key] = value;
 			return acc;
 		}, {});
-		console.log(data);
 		mod.addFriends(data);
+	}
+
+	function handleAddFamily(event: Event) {
+		const form = event.target as HTMLFormElement;
+		console.log(form);
+		const formData = new FormData(form);
+		const data = Array.from(formData.entries()).reduce((acc, [key, value]) => {
+			acc[key] = value;
+			return acc;
+		}, {});
+		data.friend_id = selectedFriendId;
+		mod.addFamilyMembers(data);
 	}
 </script>
 
@@ -46,6 +66,13 @@
 
 {#each allFriends as friend}
 	<div>
+		<button
+			onclick={() => {
+				openModal = true;
+				selectedFriendId = friend.id;
+				console.log('OPEN MODAL');
+			}}>Open Modal</button
+		>
 		<InputLabel
 			onUpdate={(e) => mod.updateFriend(friend.id, { name: e.value })}
 			value={friend.name}
@@ -87,9 +114,39 @@
 	</div>
 {/each}
 
+{#if openModal}
+	{@render familyModal(selectedFriendId)}
+{/if}
+
+{#snippet familyModal(friend_id)}
+	<div class="modal">
+		<div class="modal-content">
+			FRIEND ID: {friend_id}
+			<form
+				onsubmit={(e: Event) => {
+					e.preventDefault();
+					handleAddFamily(e);
+				}}
+			>
+				<input type="text" name="nick_name" placeholder="Friend's family name" required />
+				<!-- <input type="number" name="age" placeholder="Friend's age" required /> -->
+				<button type="submit">Add Friend</button>
+			</form>
+			<h2>Modal Title</h2>
+			<p>This is a simple modal content.</p>
+			<button onclick={() => (openModal = false)}>Close</button>
+		</div>
+	</div>
+{/snippet}
+
 {JSON.stringify(mod.getAllFriends)}
 
-<form onsubmit={handleAddFriend}>
+<form
+	onsubmit={(e: Event) => {
+		e.preventDefault();
+		handleAddFriend(e);
+	}}
+>
 	<input type="text" name="name" placeholder="Friend's name" required />
 	<input type="number" name="age" placeholder="Friend's age" required />
 	<button type="submit">Add Friend</button>
@@ -97,3 +154,24 @@
 
 <h1>Data from server</h1>
 {JSON.stringify(data)}
+
+<style>
+	.modal {
+		position: fixed;
+		z-index: 1;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+		background-color: rgba(0, 0, 0, 0.4);
+	}
+
+	.modal-content {
+		background-color: #fefefe;
+		margin: 15% auto;
+		padding: 20px;
+		border: 1px solid #888;
+		width: 80%;
+	}
+</style>
