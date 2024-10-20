@@ -3,7 +3,7 @@
 	// import { testModule } from './test.svelte';
 	import { TestModule } from './testClass.svelte';
 
-	const { data } = $props();
+	let { data } = $props();
 
 	// variables
 	let openModal: boolean = $state(false);
