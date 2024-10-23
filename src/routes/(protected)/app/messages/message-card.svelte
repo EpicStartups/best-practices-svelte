@@ -10,9 +10,10 @@
 		text: string;
 		userName: string;
 		createdAt: Date;
+		canModify: boolean;
 	};
 
-	let { id, text, userName, createdAt }: Message = $props();
+	let { id, text, userName, createdAt, canModify }: Message = $props();
 
 	let editable: boolean = $state(false);
 
@@ -36,34 +37,35 @@
 			</div>
 		</div>
 	</div>
-	{#if !editable}
-		<div class="line-clamp-2 text-xs text-muted-foreground">{text}</div>
+	<div class="line-clamp-2 text-xs text-muted-foreground">{text}</div>
+	{#if canModify}
+		{#if !editable}
+			<!-- Form action from within a component. Can use ?/delete as well but this is more explcit, meaning other routes can use this as well -->
+			<div class="flex w-full items-center justify-end">
+				<div class="flex flex-row">
+					<form method="POST" action="/app/messages?/delete">
+						<input type="hidden" name="id" value={id} />
+						<Button type="submit" variant="ghost" size="icon">
+							<span class="sr-only">Move to trash</span>
+							<Trash2 class="size-4" />
+						</Button>
+					</form>
 
-		<!-- Form action from within a component. Can use ?/delete as well but this is more explcit, meaning other routes can use this as well -->
-		<div class="flex w-full items-center justify-end">
-			<div class="flex flex-row">
-				<form method="POST" action="/app/messages?/delete">
-					<input type="hidden" name="id" value={id} />
-					<Button type="submit" variant="ghost" size="icon">
-						<span class="sr-only">Move to trash</span>
-						<Trash2 class="size-4" />
+					<Button onclick={toggleEditable} variant="ghost" size="icon">
+						<span class="sr-only">Edit</span>
+						<Pencil class="size-4" />
 					</Button>
-				</form>
-
-				<Button onclick={toggleEditable} variant="ghost" size="icon">
-					<span class="sr-only">Edit</span>
-					<Pencil class="size-4" />
-				</Button>
+				</div>
 			</div>
-		</div>
-	{:else}
-		<form class="w-full" id="update-message" method="POST" action="/app/messages?/update">
-			<input type="hidden" name="id" value={id} />
-			<Textarea typeof="text" name="text" placeholder={text} value={text} required />
-		</form>
-		<div class="flex w-full justify-end gap-2">
-			<Button onclick={toggleEditable} variant="outline">Cancel</Button>
-			<Button form="update-message" type="submit" variant="default">Save</Button>
-		</div>
+		{:else}
+			<form class="w-full" id="update-message" method="POST" action="/app/messages?/update">
+				<input type="hidden" name="id" value={id} />
+				<Textarea typeof="text" name="text" placeholder={text} value={text} required />
+			</form>
+			<div class="flex w-full justify-end gap-2">
+				<Button onclick={toggleEditable} variant="outline">Cancel</Button>
+				<Button form="update-message" type="submit" variant="default">Save</Button>
+			</div>
+		{/if}
 	{/if}
 </div>

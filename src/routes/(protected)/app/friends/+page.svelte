@@ -22,20 +22,20 @@
 	let isEditingFriendID = $state('');
 
 	function handleAddFriend(event: Event) {
-		let data = extractFormDataClientSide<{ name: string; age: number }>(event);
+		let data = extractFormDataClientSide(event);
 		mod.addFriends(data);
 	}
 
 	function handleAddHobby(event: Event) {
-		let data = extractFormDataClientSide<{ name: string; skillLevel: number }>(event);
+		let data = extractFormDataClientSide(event);
 		mod.addHobbies(data);
 	}
 
 	function handleAddFamily(event: Event, friend_id: number) {
-		let data = extractFormDataClientSide<{ friend_id: number; nick_name: string }>(event);
-		// append friend_id to form data
-		data.friend_id = friend_id;
+		let data = extractFormDataClientSide(event);
 
+		// this one
+		data.friend_id = friend_id;
 		mod.addFamilyMembers(data);
 	}
 </script>

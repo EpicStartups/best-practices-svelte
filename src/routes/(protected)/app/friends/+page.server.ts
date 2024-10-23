@@ -8,7 +8,6 @@ export const load: PageServerLoad = async ({ locals, parent }) => {
 				name: 'swimming',
 				skillLevel: 10
 			}
-		],
-		name: locals.name
+		]
 	};
 };

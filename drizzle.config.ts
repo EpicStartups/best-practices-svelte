@@ -7,8 +7,8 @@ if (!DATABASE_URL) {
 	throw new Error('No url');
 }
 export default {
-	schema: './src/lib/db/schema/schema.ts',
-	out: './src/lib/db/migrations',
+	schema: './src/lib/server/db/schema/schema.ts',
+	out: './src/lib/server/db/migrations',
 	dialect: 'postgresql',
 	dbCredentials: {
 		url: DATABASE_URL

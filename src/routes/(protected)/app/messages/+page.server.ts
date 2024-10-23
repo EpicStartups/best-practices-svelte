@@ -16,7 +16,7 @@ export const load: PageServerLoad = async ({ parent }) => {
 	// get messages from db
 	const [messages, error] = await handleFunc(getMessages());
 	if (error) {
-		console.log('THERE WAS AN ERROR');
+		console.log('THERE WAS AN ERROR:', error);
 	}
 
 	return {
@@ -49,18 +49,18 @@ export const actions = {
 		const text = validation.value!;
 
 		// Proceed with insertion.. only access the error
-		const { 1: error } = await handleFunc(
+		const [message, error] = await handleFunc(
 			insertMessage({
 				user_id: session.user.id,
 				text: text
 			})
 		);
-
 		if (error) {
 			fail(400, { error: error.message });
 		}
 
-		return { success: true };
+		// For use:enhance, return the data you want to pass back for conditional rendering
+		return { success: true, message, userName: session.user.name };
 	},
 
 	delete: async function ({ request }: { request: Request }) {
@@ -76,6 +76,11 @@ export const actions = {
 		// If not signed in, redirect to sign in page
 		if (!session?.user?.id) {
 			redirect(302, '/sign-in');
+		}
+
+		// Validate id
+		if (!id) {
+			fail(400, { error: 'id is required' });
 		}
 
 		// Proceed with deletion.. only access the error

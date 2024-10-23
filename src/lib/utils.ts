@@ -111,6 +111,45 @@ export async function handleFunc<T>(
 }
 
 /**
+ * Fetches JSON data from a specified URL and returns it along with any potential errors.
+ *
+ * This function uses the Fetch API to make an HTTP request and parse the response as JSON.
+ * It returns a tuple where the first element is the parsed data (or null if there was an error),
+ * and the second element is an Error object (or null if the request was successful).
+ *
+ * @template T - The expected type of the JSON data to be returned.
+ * @param {string} url - The URL to fetch the JSON data from.
+ * @param {RequestInit} [options] - Optional configuration options for the fetch request.
+ * @returns {Promise<[T | null, Error | null]>} A promise that resolves to a tuple:
+ *   - If successful: [parsedData, null]
+ *   - If an error occurs: [null, errorObject]
+ *
+ * @example
+ * // Fetching user data
+ * const [userData, error] = await fetchJSON<UserData>('https://api.example.com/user/1');
+ * if (error) {
+ *   console.error('Failed to fetch user data:', error);
+ * } else {
+ *   console.log('User data:', userData);
+ * }
+ */
+export async function fetchJSON<T>(
+	url: string,
+	options?: RequestInit
+): Promise<[T | null, Error | null]> {
+	try {
+		const response = await fetch(url, options);
+		if (!response.ok) {
+			throw new Error(`HTTP error! status: ${response.status}`);
+		}
+		const data = (await response.json()) as T;
+		return [data, null];
+	} catch (error) {
+		return [null, error instanceof Error ? error : new Error(String(error))];
+	}
+}
+
+/**
  * Extracts form data from a submit event and converts it to an object.
  *
  * @template T - The expected shape of the form data object.
