@@ -67,7 +67,8 @@
 							use:enhance={() => {
 								// use enhance to do selective rendering
 								formLoading = true;
-								return async ({ result }) => {
+								return async ({ result, update }) => {
+									await update();
 									// add a delay
 									setTimeout(() => {
 										if (result.type === 'success') {

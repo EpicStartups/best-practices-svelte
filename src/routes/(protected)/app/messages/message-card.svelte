@@ -37,7 +37,9 @@
 			</div>
 		</div>
 	</div>
-	<div class="line-clamp-2 text-xs text-muted-foreground">{text}</div>
+	<div class="{editable ? 'hidden' : ''} line-clamp-2 text-xs text-muted-foreground">
+		{text}
+	</div>
 	{#if canModify}
 		{#if !editable}
 			<!-- Form action from within a component. Can use ?/delete as well but this is more explcit, meaning other routes can use this as well -->

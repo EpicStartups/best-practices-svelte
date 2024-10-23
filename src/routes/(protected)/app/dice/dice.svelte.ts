@@ -1,5 +1,5 @@
 import type { DiceEntry } from '$lib/server/db/schema/app-schema';
-import { handleFunc, fetchJSON } from '$lib/utils';
+import { fetchJSON } from '$lib/utils';
 
 export class Dice {
 	private counter: number = $state(0);
@@ -15,21 +15,12 @@ export class Dice {
 		this.entries.length > 0 ? this.entries.reduce((sum, entry) => sum + entry.value, 0) : 0
 	);
 
-	async loadEntries() {
-		const [data, error] = await fetchJSON(`api/dice?user_id=${this.userId}`);
-		if (error) {
-			console.error('Error loading entries:', error);
-			this.entries = [];
-		} else {
-			this.entries = data as DiceEntry[];
-		}
-	}
-
-	constructor(user_id: string, maxValue?: number) {
+	constructor(user_id: string, diceEntries: DiceEntry[], maxValue?: number) {
 		if (maxValue !== undefined) {
 			this.maxValue = maxValue;
 		}
 		this.userId = user_id;
+		this.entries = diceEntries;
 	}
 
 	async deleteEntry(entry_id: string) {
