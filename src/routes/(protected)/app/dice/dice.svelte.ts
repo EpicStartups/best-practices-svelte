@@ -24,6 +24,20 @@ export class Dice {
 		this.userId = user_id;
 	}
 
+	async deleteEntry(entry_id: string) {
+		const { 1: error } = await fetchJSON(`api/dice?dice_id=${entry_id}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		});
+		if (error) {
+			console.log('THERE WAS AN ERROR WHILE DELETING DICE ENTRY: ', error);
+		} else {
+			this.entries = this.entries.filter((entry) => entry.id !== entry_id);
+		}
+	}
+
 	async roll() {
 		const newValue = Math.floor(Math.random() * this.maxValue) + 1;
 		const [data, error] = await fetchJSON<
@@ -42,12 +56,12 @@ export class Dice {
 		});
 		if (error) {
 			console.log('THERE WAS AN ERROR WHILE INSERTING DICE ENTRY: ', error);
+		} else {
+			if (data && data.length > 0) {
+				this.entries.unshift(...data);
+			}
+			this.counter = newValue;
 		}
-
-		if (data && data.length > 0) {
-			this.entries.unshift(...data);
-		}
-		this.counter = newValue;
 	}
 
 	get value() {

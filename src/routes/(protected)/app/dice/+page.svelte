@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { handleFunc, formatTimeAgo } from '$lib/utils';
+	import { Trash2 } from 'lucide-svelte';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Button } from '$lib/components/ui/button';
 	import { onMount } from 'svelte';
@@ -27,8 +28,17 @@
 		<div class="px-4 py-6 sm:px-6 lg:px-8">
 			{#each diceEntries as entry}
 				<Card.Root class="mb-4 w-full">
-					<Card.Header class="mb-4">
-						<Card.Title>You rolled: <span>{entry.value}</span></Card.Title>
+					<Card.Header class="mb-8">
+						<Card.Title>
+							<div class="flex flex-row items-center justify-between">
+								<p>
+									You rolled: <span>{entry.value}</span>
+								</p>
+								<Button variant="ghost" size="icon" onclick={() => dice.deleteEntry(entry.id)}>
+									<Trash2 class="size-4" />
+								</Button>
+							</div>
+						</Card.Title>
 						<Card.Description>{formatTimeAgo(new Date(entry.createdAt))}</Card.Description>
 					</Card.Header>
 				</Card.Root>

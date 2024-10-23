@@ -21,3 +21,7 @@ export async function getDiceEntries(user_id: string) {
 		.where(eq(diceEntries.user_id, user_id))
 		.orderBy(desc(diceEntries.createdAt));
 }
+
+export async function deleteDiceEntry(dice_id: string) {
+	return await db.delete(diceEntries).where(eq(diceEntries.id, dice_id));
+}
