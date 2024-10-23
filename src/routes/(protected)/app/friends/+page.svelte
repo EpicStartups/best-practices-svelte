@@ -1,7 +1,7 @@
 <script lang="ts">
 	import InputLabel from './InputLabel.svelte';
-	// import { testModule } from './test.svelte';
-	import { TestModule } from './testClass.svelte';
+	import { TestModule } from './constructor.svelte';
+	import { extractFormDataClientSide } from '$lib/utils';
 
 	const { data } = $props();
 
@@ -22,36 +22,20 @@
 	let isEditingFriendID = $state('');
 
 	function handleAddFriend(event: Event) {
-		const form = event.target as HTMLFormElement;
-		const formData = new FormData(form);
-		const data = Array.from(formData.entries()).reduce((acc, [key, value]) => {
-			acc[key] = value;
-			return acc;
-		}, {});
+		let data = extractFormDataClientSide<{ name: string; age: number }>(event);
 		mod.addFriends(data);
 	}
 
 	function handleAddHobby(event: Event) {
-		const form = event.target as HTMLFormElement;
-		const formData = new FormData(form);
-		const data = Array.from(formData.entries()).reduce((acc, [key, value]) => {
-			acc[key] = value;
-			return acc;
-		}, {});
+		let data = extractFormDataClientSide<{ name: string; skillLevel: number }>(event);
 		mod.addHobbies(data);
 	}
 
 	function handleAddFamily(event: Event, friend_id: number) {
-		const form = event.target as HTMLFormElement;
-		console.log(form);
-		const formData = new FormData(form);
-		const data = Array.from(formData.entries()).reduce((acc, [key, value]) => {
-			acc[key] = value;
-			return acc;
-		}, {});
-
-		// this one
+		let data = extractFormDataClientSide<{ friend_id: number; nick_name: string }>(event);
+		// append friend_id to form data
 		data.friend_id = friend_id;
+
 		mod.addFamilyMembers(data);
 	}
 </script>

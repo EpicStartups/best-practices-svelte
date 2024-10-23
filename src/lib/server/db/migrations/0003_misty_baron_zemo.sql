@@ -1,0 +1,1 @@
+ALTER TABLE "message" ADD COLUMN "updatedAt" timestamp NOT NULL;
