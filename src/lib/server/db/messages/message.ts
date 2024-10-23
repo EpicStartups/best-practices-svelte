@@ -24,5 +24,15 @@ export async function getMessages() {
 			userName: user.name
 		})
 		.from(message)
-		.leftJoin(user, eq(message.user_id, user.id));
+		.innerJoin(user, eq(message.user_id, user.id));
+}
+
+export async function deleteMessage(id: string) {
+	return await db.delete(message).where(eq(message.id, id));
+}
+
+export async function updateMessage(
+	messageData: Omit<Message, 'user_id' | 'createdAt' | 'updatedAt'>
+) {
+	return await db.update(message).set(messageData).where(eq(message.id, messageData.id));
 }
