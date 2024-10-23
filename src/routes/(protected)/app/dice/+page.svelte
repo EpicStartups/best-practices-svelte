@@ -23,8 +23,14 @@
 </script>
 
 <div class="flex h-screen">
-	<!-- Sidebar -->
 	<aside class="hidden w-96 overflow-y-auto border-r border-gray-200 xl:block">
+		<div class="flex-1 space-y-4 p-8 pt-6">
+			<h2 class="mb-2 text-lg font-semibold">Dice Statistics</h2>
+			<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-2">
+				{@render numberCard('Average', Number(dice.average.toFixed(2)))}
+				{@render numberCard('Sum', Number(dice.sum))}
+			</div>
+		</div>
 		<div class="px-4 py-6 sm:px-6 lg:px-8">
 			{#each diceEntries as entry}
 				<Card.Root class="mb-4 w-full">
@@ -63,3 +69,14 @@
 		</div>
 	</main>
 </div>
+
+{#snippet numberCard(title: string, number: number)}
+	<Card.Root>
+		<Card.Header class="flex flex-row items-center justify-between space-y-0 pb-2">
+			<Card.Title class="text-sm font-medium">{title}</Card.Title>
+		</Card.Header>
+		<Card.Content>
+			<div class="text-2xl font-bold">{number}</div>
+		</Card.Content>
+	</Card.Root>
+{/snippet}

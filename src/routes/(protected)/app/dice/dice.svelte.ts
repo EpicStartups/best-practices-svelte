@@ -6,6 +6,14 @@ export class Dice {
 	private maxValue: number = $state(100);
 	private userId: string;
 	private entries: DiceEntry[] = $state([]);
+	private averageValue: number = $derived(
+		this.entries.length > 0
+			? this.entries.reduce((sum, entry) => sum + entry.value, 0) / this.entries.length
+			: 0
+	);
+	private sumValue: number = $derived(
+		this.entries.length > 0 ? this.entries.reduce((sum, entry) => sum + entry.value, 0) : 0
+	);
 
 	async loadEntries() {
 		const [data, error] = await fetchJSON(`api/dice?user_id=${this.userId}`);
@@ -70,5 +78,13 @@ export class Dice {
 
 	get history() {
 		return this.entries;
+	}
+
+	get average() {
+		return this.averageValue;
+	}
+
+	get sum() {
+		return this.sumValue;
 	}
 }
