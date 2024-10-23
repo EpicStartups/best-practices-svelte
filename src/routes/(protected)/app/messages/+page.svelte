@@ -74,6 +74,8 @@
 											const messageData: Message = result.data?.message;
 											const userName: string = result.data?.userName;
 
+											console.log('RESULT DATA: ', result.data);
+
 											// append to the beginning of the array
 											messages.unshift({
 												message: {

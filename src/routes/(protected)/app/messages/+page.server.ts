@@ -60,7 +60,7 @@ export const actions = {
 		}
 
 		// For use:enhance, return the data you want to pass back for conditional rendering
-		return { success: true, message, userName: session.user.name };
+		return { success: true, message: message[0], userName: session.user.name };
 	},
 
 	delete: async function ({ request }: { request: Request }) {
