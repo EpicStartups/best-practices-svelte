@@ -45,7 +45,7 @@ export class Dice {
 		}
 
 		if (data && data.length > 0) {
-			this.entries.push(...data);
+			this.entries.unshift(...data);
 		}
 		this.counter = newValue;
 	}

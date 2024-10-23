@@ -18,6 +18,6 @@ export async function getDiceEntries(user_id: string) {
 	return await db
 		.select()
 		.from(diceEntries)
-		.innerJoin(user, eq(diceEntries.user_id, user_id))
+		.where(eq(diceEntries.user_id, user_id))
 		.orderBy(desc(diceEntries.createdAt));
 }
